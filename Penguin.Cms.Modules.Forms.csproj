@@ -21,12 +21,10 @@
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="3.0.0" />
     <PackageReference Include="Penguin.Cms.Email.Abstractions" Version="1.0.0" />
     <PackageReference Include="Penguin.Cms.Forms.Repositories" Version="1.0.0" />
+    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="1.0.0" />
     <PackageReference Include="Penguin.Cms.Web" Version="1.0.0" />
     <PackageReference Include="Penguin.Email.Templating.Abstractions" Version="1.0.0" />
     <PackageReference Include="Penguin.Reflection.Serialization.Extensions" Version="3.0.4" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Penguin.Cms.Modules.Dynamic\Penguin.Cms.Modules.Dynamic.csproj" />
   </ItemGroup>
   <Import Project="Penguin.Projects.Shared\Penguin.Projects.Shared.csproj" />
 </Project>
