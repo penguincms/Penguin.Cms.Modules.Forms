@@ -1,0 +1,30 @@
+﻿@model FormSubmissionPageModel
+@using System.Data
+@using Newtonsoft.Json
+
+@{
+	Layout = "_Layout";
+
+	string Json = $"[{string.Join(",", Model.Submissions.Select(s => s.FormData))}]";
+
+	DataTable dt = (DataTable)JsonConvert.DeserializeObject(Json, (typeof(DataTable)));
+
+	dt.Columns.Add("Submitted By", typeof(HtmlString)).SetOrdinal(0);
+
+	int i = 0;
+	foreach(SubmittedForm submission in Model.Submissions)
+	{
+		DataRow thisRow = dt.Rows[i++];
+		//This is dumb
+		System.Text.StringBuilder sb = new System.Text.StringBuilder();
+		System.IO.StringWriter writer = new System.IO.StringWriter(sb);
+		System.Text.Encoding asciiEncoding = System.Text.Encoding.ASCII;
+		System.Text.Encodings.Web.HtmlEncoder hEncoder = System.Text.Encodings.Web.HtmlEncoder.Default;
+		Component.InvokeAsync("UserRecord", new { Model = submission.Submitter }).Result.WriteTo(writer, hEncoder);
+
+		thisRow["Submitted By"] = new HtmlString(writer.ToString());
+	}
+
+}
+
+<partial name="DataTable" model="@dt" />

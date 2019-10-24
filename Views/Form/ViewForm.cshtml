@@ -1,0 +1,126 @@
+﻿@model IMetaObject
+
+@{
+    Layout = "_Layout";
+    Html.IncludeJS("form-render.min");
+
+    Func<IMetaObject, IHtmlContent> RenderMeta = null;
+    RenderMeta = this.Helper((IMetaObject toRender) =>
+
+    @<text>
+        @{
+        Dictionary<string, object> Attributes = new Dictionary<string, object>()
+        {
+            ["propertyname"] = toRender.Property?.Name,
+            ["isroot"] = toRender.IsRoot(),
+            ["coretype"] = toRender.GetCoreType(),
+            ["recursive"] = toRender.IsRecursive(),
+            ["propertytype"] = toRender.Type.Name
+
+        };
+
+        if (toRender.GetCoreType() == CoreType.Collection)
+        {
+            Attributes.Add("collectiontype", toRender.Type.CollectionType);
+        }
+
+        string DisplayName = toRender?.Property?.AttributeRef<DisplayAttribute, string>(nameof(DisplayAttribute.Name));
+
+        DisplayContexts customRouteContext = toRender?.Property?
+                                            .AttributeStruct<DisplayContexts>(
+                                                typeof(CustomRouteAttribute),
+                                                nameof(CustomRouteAttribute.Context),
+                                                DisplayContexts.None)
+                                            ?? DisplayContexts.None;
+        }
+        <property @Html.Raw(DynamicEditorService.JoinAttributes(Attributes))>
+            @*This feels incredibly hackish but I cant think of another way to inject the checkboxes without creating a recursive wrapping model again*@
+                <name>
+                    @if (!string.IsNullOrWhiteSpace(toRender.Property?.Name))
+                    {
+                        <span class="propertyName">
+                            @(!string.IsNullOrWhiteSpace(DisplayName) ? DisplayName : toRender.Property?.Name)
+                        </span>
+                    }
+                </name>
+                <value>
+                    @{
+
+                        EditorHandlerResult handler = DynamicEditorService.FindHandler(toRender, DisplayContexts.Edit);
+
+                        if (handler is DynamicEditorResult)
+                        {
+                            if (toRender.GetCoreType() == CoreType.Collection)
+                            {
+                                foreach (IMetaObject thisChild in toRender.CollectionItems)
+                                {
+                                    thisChild.SetParent(toRender);
+                                    @RenderMeta(thisChild)
+                                }
+                            }
+                            else if (toRender.GetCoreType() == CoreType.Reference)
+                            {
+                                foreach (IMetaObject thisChild in toRender.Properties.OrderBy(p => p.Property.AttributeStruct(typeof(DisplayAttribute), nameof(DisplayAttribute.Order), 0)))
+                                {
+                                    thisChild.SetParent(toRender);
+                                    @RenderMeta(thisChild)
+                                }
+                            }
+                        }
+                        else if (handler is DynamicViewResult viewResult)
+                        {
+                            <partial name="@viewResult.ViewPath" model="@toRender" />
+                        }
+                        else if (handler is DynamicActionResult action)
+                        {
+                            @Html.MetaRoute(action.RouteData, toRender)
+                        }
+                    }
+                </value>
+            </property>
+    </text>
+
+    );
+}
+
+<div class="formWrapper">
+    <form class="formBuilder">
+        <div class="formRender">
+            <input type="hidden" id="Guid" name="Guid" value="@Model[nameof(Form.Guid)].Value" />
+            @RenderMeta(Model)
+        </div>
+    </form>
+    <button onclick="SubmitForm()">
+        Submit
+    </button>
+</div>
+
+<script>
+    var form;
+
+    $('[data-propertyname]').each(function (i, e) {
+        if (!elementHasProperty(e, 'name')) {
+            $(e).attr('name', $(e).attr('data-propertyname'));
+        }
+    });
+
+    function jQFormSerializeArrToJson(formSerializeArr) {
+        var jsonObj = {};
+        jQuery.map(formSerializeArr, function (n, i) {
+            jsonObj[n.name] = n.value;
+        });
+
+        return jsonObj;
+    }
+
+    function SubmitForm() {
+        var formData = jQFormSerializeArrToJson($('.formBuilder').serializeArray());
+
+        $.post('/Form/Actions/Submit', {
+            formData: JSON.stringify(formData),
+            guid: $('#Guid').val()
+        }, function (result) {
+            $('.formBuilder').html(result);
+        });
+    }
+</script>

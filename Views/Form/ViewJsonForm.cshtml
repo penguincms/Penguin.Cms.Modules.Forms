@@ -1,0 +1,46 @@
+﻿@model JsonForm
+@{
+	Layout = "_Layout";
+    Html.IncludeJS("form-render.min");
+	Html.IncludeJS("/lib/jquery/dist/jquery");
+}
+<input type="hidden" id="Guid" name="Guid" value="@Model.Guid" />
+<form class="formBuilder">
+    <div class="formRender">
+    </div>
+</form>
+<button class="formSubmit" onclick="SubmitForm()">
+    Submit
+</button>
+<script>
+	var form;
+
+		function jQFormSerializeArrToJson(formSerializeArr) {
+			var jsonObj = {};
+			jQuery.map(formSerializeArr, function (n, i) {
+				jsonObj[n.name] = n.value;
+			});
+
+			return jsonObj;
+		}
+
+	function SubmitForm() {
+		var formData = jQFormSerializeArrToJson($('.formBuilder').serializeArray());
+
+		$.post('/Form/Actions/Submit', {
+			formData: JSON.stringify(formData),
+			guid: $('#Guid').val()
+		}, function (result) {
+			$('.formBuilder').html(result);
+			$('.formSubmit').hide();
+		});
+
+	}
+
+	jQuery(function ($) {
+		form = $('.formRender').formRender({
+			dataType: 'json',
+			formData: @Html.Raw(Model.FormData)
+		});
+	});
+</script>

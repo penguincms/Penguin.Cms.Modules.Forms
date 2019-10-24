@@ -1,0 +1,44 @@
+﻿@model List<FormSubmissionPageModel>
+
+@{
+	Layout = "_Layout";
+}
+
+<table>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Url
+        </th>
+        <th>
+            Created
+        </th>
+        <th>
+            Submissions
+        </th>
+        <th>
+        </th>
+    </tr>
+    @foreach (FormSubmissionPageModel thisForm in Model)
+	{
+    <tr>
+        <td>
+            @thisForm.Form.Name
+        </td>
+        <td>
+            @thisForm.Form.FriendlyUrl
+        </td>
+        <td>
+            @thisForm.Form.DateCreated
+        </td>
+        <td>
+            @thisForm.Submissions.Count
+        </td>
+        <td>
+            <a href="/admin/form/submissions/@thisForm.Form.Name.Replace(" ", "-")">@Html.MaterialIcon("visibility")</a>
+        </td>
+    </tr>
+	}
+</table>

@@ -1,0 +1,21 @@
+﻿@using Microsoft.AspNetCore.Html
+@using Penguin.Cms.Web.Extensions
+@using Penguin.Extensions.Strings
+@using Microsoft.Extensions.FileProviders
+@using Penguin.Cms.Abstractions.Attributes;
+@using Penguin.Cms.Forms
+@using Penguin.Reflection.Serialization.Extensions;
+@using Penguin.Reflection.Serialization.Abstractions.Interfaces;
+@using Penguin.Cms.Modules.Dynamic.Services
+@using Penguin.Persistence.Abstractions.Attributes.Rendering;
+@using Penguin.Persistence.Abstractions.Attributes.Control;
+@using Penguin.Reflection.Serialization.Objects
+@using Penguin.Cms.Modules.Dynamic.Rendering
+@using Penguin.Reflection.Abstractions;
+
+@inject IFileProvider FileProvider
+@inject IServiceProvider ServiceProvider
+@inject DynamicEditorService DynamicEditorService
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Penguin.Cms.Modules.Core

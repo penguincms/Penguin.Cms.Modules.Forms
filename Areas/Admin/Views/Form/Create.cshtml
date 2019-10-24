@@ -1,0 +1,92 @@
+﻿@model FormCreatePageModel
+@using Penguin.Reflection.Serialization.Objects
+
+@{
+    Html.IncludeJS("form-builder.min");
+    Layout = "_Layout";
+    MetaObject formObject = new MetaObject(Model.ExistingForm);
+    formObject.Hydrate();
+}
+
+<div id="Edit">
+    <div class="ui-tabs">
+        <ul>
+
+            <li><a href="#Content">Content</a></li>
+            <li><a href="#Settings">Settings</a></li>
+            @foreach (ViewModule vm in Model.Modules)
+            {
+                <li><a href="#@vm.Name">@vm.Name</a></li>
+            }
+        </ul>
+
+        <div id="Content">
+            <div id="FormBuilder">
+                <input type="hidden" name="_Id" id="_Id" value="@(Model?.ExistingForm?._Id ?? 0)" />
+                <div class="build-wrap"></div>
+            </div>
+            <button onclick="KeyProvider.Submit()">
+                Save
+            </button>
+        </div>
+        <div id="Settings">
+            <partial name="~/Areas/Admin/Views/Shared/ComponentEditor.cshtml" model="@formObject" />
+        </div>
+        @foreach (ViewModule vm in Model.Modules)
+        {
+            <div id="@vm.Name">
+                <partial name="@vm.ViewPath" model="@vm.Model" />
+            </div>
+        }
+        <script>
+	        var formBuilder = {};
+
+	        jQuery(function ($) {
+		        var options = {
+			        roles: {
+				        @*@Html.Raw(String.Join(",\r\n", Model.AvailableRoles.Select(r => $"{r._Id}: '{r.Name}'")))*@
+			        }
+		        };
+
+		        @if(Model.ExistingForm != null)
+		        {
+			        <text>options.formData = '@Html.Raw(Model.ExistingForm.FormData)';</text>
+		        }
+
+		        formBuilder = $('.build-wrap').formBuilder(options);
+	        });
+
+            KeyProvider.AddFunction(function () {
+                var success = false;
+                $.ajax({
+                  type: 'POST',
+                  url: '/Admin/Form/SaveForm',
+                  data: JSON.stringify({
+			            formhtml: formBuilder.formData.toString(),
+			            _Id: $('#_Id').val()
+                  }),
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  success: function (result) {
+                      $('[name="_Id"]').val(result.id);
+                      success = true;
+                  },
+                  failure: function (result) {
+                      success = false;
+                  },
+                  async:false
+                });
+
+                return success;
+            }, true, function (success) {
+
+                    if (success) {
+                        $("<div>All objects were sucessfully saved</div>").dialog();
+                    } else {
+                        $("<div>An error occured saving some of the objects</div>").dialog();
+                    }
+
+            });
+        </script>
+    </div>
+</div>
