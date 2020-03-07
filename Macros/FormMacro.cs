@@ -14,9 +14,9 @@ namespace Penguin.Cms.Modules.Forms.Macros
 
         public string DisplayName { get; set; } = "Form Macros";
 
-        public string MacroBody => $"@(Model.{DisplayName.ToVariableName()})";
+        public string MacroBody => $"@(Model.{this.DisplayName.ToVariableName()})";
 
-        IEnumerable<ITemplateProperty> ITemplateProperty.Children => Children;
+        IEnumerable<ITemplateProperty> ITemplateProperty.Children => this.Children;
 
         public FormMacro()
         {
@@ -24,7 +24,7 @@ namespace Penguin.Cms.Modules.Forms.Macros
 
         public FormMacro(string FieldName)
         {
-            DisplayName = FieldName;
+            this.DisplayName = FieldName;
         }
     }
 }

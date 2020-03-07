@@ -26,9 +26,9 @@ namespace Penguin.Cms.Modules.Forms.Controllers
 
         public FormController(FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, ISendTemplates emailTemplateRepository = null)
         {
-            EmailTemplateRepository = emailTemplateRepository;
-            FormSubmissionRepository = formSubmissionRepository;
-            FormRepository = formRepository;
+            this.EmailTemplateRepository = emailTemplateRepository;
+            this.FormSubmissionRepository = formSubmissionRepository;
+            this.FormRepository = formRepository;
         }
 
         [EmailHandler("Any Form Submission")]
@@ -68,7 +68,7 @@ namespace Penguin.Cms.Modules.Forms.Controllers
 
             if (thisForm is null)
             {
-                return Redirect("/Error/NotFound");
+                return this.Redirect("/Error/NotFound");
             }
 
             if (thisForm.IsJsonForm)

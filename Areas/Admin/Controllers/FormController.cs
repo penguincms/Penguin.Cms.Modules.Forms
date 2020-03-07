@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Penguin.Cms.Core.Services;
 using Penguin.Cms.Entities;
 using Penguin.Cms.Forms;
 using Penguin.Cms.Forms.Repositories;
@@ -18,25 +17,28 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
     [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
     public class FormController : ObjectManagementController<JsonForm>
     {
-        public class FormPost
-        {
-            public string _Id { get; set; }
-            public string formhtml { get; set; }
-            public int Id => int.Parse(_Id);
-        }
-
         protected FormRepository FormRepository { get; set; }
 
         protected FormSubmissionRepository FormSubmissionRepository { get; set; }
 
-
-        public FormController( FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, IServiceProvider serviceProvider) : base(serviceProvider)
+        public class FormPost
         {
-            FormSubmissionRepository = formSubmissionRepository;
-            FormRepository = formRepository;
+            [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+            public string? _Id { get; set; }
+            public string? Formhtml { get; set; }
+            public int Id => int.TryParse(this._Id, out int id) ? id : 0;
         }
 
-        public ActionResult BaseEdit(int Id) => base.Edit(Id, typeof(JsonForm).FullName);
+        public FormController(FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, IServiceProvider serviceProvider) : base(serviceProvider)
+        {
+            this.FormSubmissionRepository = formSubmissionRepository;
+            this.FormRepository = formRepository;
+        }
+
+        public ActionResult BaseEdit(int Id)
+        {
+            return base.Edit(Id, typeof(JsonForm).FullName);
+        }
 
         public ActionResult Create()
         {
@@ -44,7 +46,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
             FormCreatePageModel model = new FormCreatePageModel
             {
                 ExistingForm = newForm,
-                Modules = ComponentService.GetComponents<ViewModule, Entity>(newForm).ToList()
+                Modules = this.ComponentService.GetComponents<ViewModule, Entity>(newForm).ToList()
             };
 
             return this.View(model);
@@ -62,7 +64,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
             FormCreatePageModel model = new FormCreatePageModel
             {
                 ExistingForm = existingForm,
-                Modules = ComponentService.GetComponents<ViewModule, Entity>(existingForm).ToList()
+                Modules = this.ComponentService.GetComponents<ViewModule, Entity>(existingForm).ToList()
             };
 
             return this.View("Create", model);
@@ -77,7 +79,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
 
             JsonForm toSave;
 
-            using (IWriteContext context = FormRepository.WriteContext())
+            using (IWriteContext context = this.FormRepository.WriteContext())
             {
                 if (formBody.Id != 0)
                 {
@@ -88,7 +90,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
                     toSave = new JsonForm();
                 }
 
-                toSave.FormData = formBody.formhtml;
+                toSave.FormData = formBody.Formhtml;
 
                 this.FormRepository.AddOrUpdate(toSave);
             }
