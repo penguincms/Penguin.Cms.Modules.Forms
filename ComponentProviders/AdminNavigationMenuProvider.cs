@@ -25,8 +25,8 @@ namespace Penguin.Cms.Modules.Forms.ComponentProviders
                         Href = "/Admin/Form/Index",
                         Permissions = new List<ISecurityGroupPermission>()
                         {
-                            this.CreatePermission(RoleNames.ContentManager, PermissionTypes.Read),
-                            this.CreatePermission(SecurityRoles.SysAdmin, PermissionTypes.Read | PermissionTypes.Write)
+                            this.CreatePermission(RoleNames.CONTENT_MANAGER, PermissionTypes.Read),
+                            this.CreatePermission(SecurityRoles.SYS_ADMIN, PermissionTypes.Read | PermissionTypes.Write)
                         },
                         Children = new List<INavigationMenu>()
                         {
@@ -38,8 +38,8 @@ namespace Penguin.Cms.Modules.Forms.ComponentProviders
                                 Href = "/Admin/Form/Submissions",
                                 Permissions = new List<ISecurityGroupPermission>()
                                 {
-                                    this.CreatePermission(RoleNames.ContentManager, PermissionTypes.Read),
-                                    this.CreatePermission(SecurityRoles.SysAdmin, PermissionTypes.Read | PermissionTypes.Write)
+                                    this.CreatePermission(RoleNames.CONTENT_MANAGER, PermissionTypes.Read),
+                                    this.CreatePermission(SecurityRoles.SYS_ADMIN, PermissionTypes.Read | PermissionTypes.Write)
                                 }
                             },
                             new NavigationMenu()
@@ -50,8 +50,8 @@ namespace Penguin.Cms.Modules.Forms.ComponentProviders
                                 Href = "/Admin/Form/Create",
                                 Permissions = new List<ISecurityGroupPermission>()
                                 {
-                                    this.CreatePermission(RoleNames.ContentManager, PermissionTypes.Read),
-                                    this.CreatePermission(SecurityRoles.SysAdmin, PermissionTypes.Read | PermissionTypes.Write)
+                                    this.CreatePermission(RoleNames.CONTENT_MANAGER, PermissionTypes.Read),
+                                    this.CreatePermission(SecurityRoles.SYS_ADMIN, PermissionTypes.Read | PermissionTypes.Write)
                                 }
                             },
                             new NavigationMenu()
@@ -62,8 +62,8 @@ namespace Penguin.Cms.Modules.Forms.ComponentProviders
                                 Href = "/Admin/Form/List",
                                 Permissions = new List<ISecurityGroupPermission>()
                                 {
-                                    this.CreatePermission(RoleNames.ContentManager, PermissionTypes.Read),
-                                    this.CreatePermission(SecurityRoles.SysAdmin, PermissionTypes.Read | PermissionTypes.Write)
+                                    this.CreatePermission(RoleNames.CONTENT_MANAGER, PermissionTypes.Read),
+                                    this.CreatePermission(SecurityRoles.SYS_ADMIN, PermissionTypes.Read | PermissionTypes.Write)
                                 }
                             }
                         }

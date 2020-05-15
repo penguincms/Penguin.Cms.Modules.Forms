@@ -2,6 +2,6 @@
 {
     public static class RoleNames
     {
-        public const string ContentManager = "Content Manager";
+        public const string CONTENT_MANAGER = "Content Manager";
     }
 }

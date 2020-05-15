@@ -4,6 +4,7 @@ using Penguin.Persistence.Abstractions.Attributes.Rendering;
 namespace Penguin.Cms.Modules.Forms.Entities
 {
     [Display(Name = "Contact Us")]
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public class Contact : Form
     {
         [HtmlRender(HtmlRenderAttribute.RenderingType.email)]
@@ -21,4 +22,6 @@ namespace Penguin.Cms.Modules.Forms.Entities
         [HtmlRender(HtmlRenderAttribute.RenderingType.text)]
         public string Subject { get; set; } = string.Empty;
     }
+
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
