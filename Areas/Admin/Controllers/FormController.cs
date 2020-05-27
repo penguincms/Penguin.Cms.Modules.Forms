@@ -7,6 +7,7 @@ using Penguin.Cms.Modules.Forms.Areas.Admin.Models;
 using Penguin.Cms.Web.Modules;
 using Penguin.Persistence.Abstractions.Interfaces;
 using Penguin.Reflection;
+using Penguin.Security.Abstractions.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -30,7 +31,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
             public int Id => int.TryParse(this._Id, out int id) ? id : 0;
         }
 
-        public FormController(FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, IServiceProvider serviceProvider) : base(serviceProvider)
+        public FormController(FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, IServiceProvider serviceProvider, IUserSession userSession) : base(serviceProvider, userSession)
         {
             this.FormSubmissionRepository = formSubmissionRepository;
             this.FormRepository = formRepository;
