@@ -8,7 +8,6 @@ using Penguin.Email.Abstractions.Interfaces;
 using Penguin.Email.Templating.Abstractions.Extensions;
 using Penguin.Email.Templating.Abstractions.Interfaces;
 using Penguin.Persistence.Abstractions.Interfaces;
-using Penguin.Reflection.Serialization.Abstractions.Interfaces;
 using Penguin.Reflection.Serialization.Constructors;
 using Penguin.Reflection.Serialization.Objects;
 using System;
@@ -79,7 +78,7 @@ namespace Penguin.Cms.Modules.Forms.Controllers
             {
                 MetaConstructor c = AdminController.Constructor;
 
-                IMetaObject mo = new MetaObject(thisForm, c);
+                MetaObject mo = new MetaObject(thisForm, c);
                 mo.Hydrate();
                 return this.View("ViewForm", mo);
             }

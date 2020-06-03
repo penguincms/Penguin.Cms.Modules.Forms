@@ -54,7 +54,7 @@
                             {
                                 foreach (IMetaObject thisChild in toRender.CollectionItems)
                                 {
-                                    thisChild.SetParent(toRender);
+                                    thisChild.Parent = toRender;
                                     @RenderMeta(thisChild)
                                 }
                             }
@@ -62,7 +62,7 @@
                             {
                                 foreach (IMetaObject thisChild in toRender.Properties.OrderBy(p => p.Property.AttributeStruct(typeof(DisplayAttribute), nameof(DisplayAttribute.Order), 0)))
                                 {
-                                    thisChild.SetParent(toRender);
+                                    thisChild.Parent = toRender;
                                     @RenderMeta(thisChild)
                                 }
                             }
