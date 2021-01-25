@@ -63,7 +63,6 @@ namespace Penguin.Cms.Modules.Forms.Macros
             this.EmailTemplateRepository.TrySendTemplate(Parameters, null, submittedForm.Target.Owner.ToString());
         }
 
-        [SuppressMessage("Globalization", "CA1303:Do not pass literals as localized parameters")]
         public IEnumerable<ITemplateDefinition> GetTemplateDefinitions()
         {
             return Cache ?? throw new NullReferenceException("The Cache was not populated before the request");

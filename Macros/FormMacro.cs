@@ -2,11 +2,8 @@
 using Penguin.Templating.Abstractions.Interfaces;
 using System.Collections.Generic;
 
-#pragma warning disable CA1716 // Identifiers should not match keywords
-
 namespace Penguin.Cms.Modules.Forms.Macros
 {
-#pragma warning restore CA1716 // Identifiers should not match keywords
 
     public class FormMacro : ITemplateProperty
     {
