@@ -17,7 +17,7 @@
     <PackageReference Include="Penguin.Cms.Email.Abstractions" Version="5.0.2-TA9KKLU" />
     <PackageReference Include="Penguin.Email.Templating.Abstractions" Version="5.0.2-TA9KKLU" />
     <PackageReference Include="Penguin.Cms.Forms.Repositories" Version="5.0.2-TAA4YFP" />
-    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="5.0.2-TAA4YFP" />
+    <PackageReference Include="Penguin.Cms.Modules.Dynamic" Version="5.0.2-TAAG11Z" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
