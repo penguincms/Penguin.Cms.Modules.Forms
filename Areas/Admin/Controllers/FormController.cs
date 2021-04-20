@@ -15,7 +15,6 @@ using System.Linq;
 
 namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
 {
-    [SuppressMessage("Naming", "CA1707:Identifiers should not contain underscores")]
     public class FormController : ObjectManagementController<JsonForm>
     {
         protected FormRepository FormRepository { get; set; }
