@@ -75,7 +75,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
         {
             if (formBody is null)
             {
-                throw new ArgumentException(nameof(formBody));
+                throw new ArgumentNullException(nameof(formBody));
             }
 
             JsonForm toSave;

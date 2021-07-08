@@ -10,7 +10,6 @@ using Penguin.Templating.Abstractions;
 using Penguin.Templating.Abstractions.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace Penguin.Cms.Modules.Forms.Macros
@@ -80,9 +79,9 @@ namespace Penguin.Cms.Modules.Forms.Macros
 
                 foreach (JsonFormField thisField in thisForm.Fields)
                 {
-                    if (thisField.name != null)
+                    if (thisField.Name != null)
                     {
-                        toAdd.Children.Add(new FormMacro(thisField.name));
+                        toAdd.Children.Add(new FormMacro(thisField.Name));
                     }
                 }
 
