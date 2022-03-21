@@ -36,10 +36,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
             this.FormRepository = formRepository;
         }
 
-        public ActionResult BaseEdit(int Id)
-        {
-            return base.Edit(Id, typeof(JsonForm).FullName);
-        }
+        public ActionResult BaseEdit(int Id) => base.Edit(Id, typeof(JsonForm).FullName);
 
         public ActionResult Create()
         {
