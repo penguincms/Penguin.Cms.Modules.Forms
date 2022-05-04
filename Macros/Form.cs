@@ -28,11 +28,20 @@ namespace Penguin.Cms.Modules.Forms.Macros
             this.FormRepository = formRepository;
         }
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup) => this.RefreshHandlers();
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
+        {
+            this.RefreshHandlers();
+        }
 
-        public void AcceptMessage(Creating<JsonForm> startup) => this.RefreshHandlers();
+        public void AcceptMessage(Creating<JsonForm> startup)
+        {
+            this.RefreshHandlers();
+        }
 
-        public void AcceptMessage(Updating<JsonForm> startup) => this.RefreshHandlers();
+        public void AcceptMessage(Updating<JsonForm> startup)
+        {
+            this.RefreshHandlers();
+        }
 
         public void AcceptMessage(Creating<SubmittedForm> submittedForm)
         {
@@ -53,7 +62,10 @@ namespace Penguin.Cms.Modules.Forms.Macros
             this.EmailTemplateRepository.TrySendTemplate(Parameters, null, submittedForm.Target.Owner.ToString());
         }
 
-        public IEnumerable<ITemplateDefinition> GetTemplateDefinitions() => Cache ?? throw new NullReferenceException("The Cache was not populated before the request");
+        public IEnumerable<ITemplateDefinition> GetTemplateDefinitions()
+        {
+            return Cache ?? throw new NullReferenceException("The Cache was not populated before the request");
+        }
 
         private void RefreshHandlers()
         {

@@ -8,27 +8,27 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin
     {
         public void RegisterRoutes(IRouteBuilder routes)
         {
-            routes.MapRoute(
+            _ = routes.MapRoute(
                 "Admin_Submissions",
                 "Admin/Form/Submissions/{Name?}",
                 new { area = "admin", controller = "Form", action = "Submissions" }
 
             );
 
-            routes.MapRoute(
+            _ = routes.MapRoute(
                 "Form",
                 "Form/{Name}",
                 new { area = "", controller = "Form", action = "ViewByName" }
 
             );
 
-            routes.MapRoute(
+            _ = routes.MapRoute(
                  name: "Form_Submit",
                  template: "Form/Actions/Submit",
                  defaults: new { controller = "Form", action = "Submit" }
              );
 
-            routes.MapRoute(
+            _ = routes.MapRoute(
                 name: "Form_Id_View",
                 template: "Form/View/{Id}",
                 defaults: new { controller = "Form", action = "ViewById" }
