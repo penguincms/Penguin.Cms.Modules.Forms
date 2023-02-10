@@ -18,6 +18,7 @@ namespace Penguin.Cms.Modules.Forms.Macros
     {
         private const string FORM_BODY_MACRO = "Form Json";
         private static List<ITemplateDefinition>? Cache;
+
         protected ISendTemplates EmailTemplateRepository { get; set; }
 
         protected FormRepository FormRepository { get; set; }
