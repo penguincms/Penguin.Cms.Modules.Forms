@@ -23,64 +23,64 @@ namespace Penguin.Cms.Modules.Forms.Controllers
 
         protected FormSubmissionRepository FormSubmissionRepository { get; set; }
 
-        public FormController(FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, ISendTemplates emailTemplateRepository = null)
+        public FormController(FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, ISendTemplates? emailTemplateRepository = null)
         {
-            this.EmailTemplateRepository = emailTemplateRepository;
-            this.FormSubmissionRepository = formSubmissionRepository;
-            this.FormRepository = formRepository;
+            EmailTemplateRepository = emailTemplateRepository;
+            FormSubmissionRepository = formSubmissionRepository;
+            FormRepository = formRepository;
         }
 
         [EmailHandler("Any Form Submission")]
         public ActionResult Submit(string formData, Guid ownerGuid)
         {
-            using (IWriteContext context = this.FormSubmissionRepository.WriteContext())
+            using (IWriteContext context = FormSubmissionRepository.WriteContext())
             {
-                SubmittedForm thisForm = new SubmittedForm
+                SubmittedForm thisForm = new()
                 {
                     FormData = formData,
                     Owner = ownerGuid
                 };
 
-                this.FormSubmissionRepository.AddOrUpdate(thisForm);
+                FormSubmissionRepository.AddOrUpdate(thisForm);
             }
 
-            this.EmailTemplateRepository.TrySendTemplate(new Dictionary<string, object>()
+            EmailTemplateRepository.TrySendTemplate(new Dictionary<string, object>()
             {
                 [nameof(formData)] = formData.PrettifyJson(),
                 [nameof(ownerGuid)] = ownerGuid
             });
 
-            return this.Content("Submitted");
+            return Content("Submitted");
         }
 
         public ActionResult ViewById(int Id)
         {
-            JsonForm form = this.FormRepository.Find(Id) ?? throw new NullReferenceException($"Form not found with Id {Id}");
+            JsonForm form = FormRepository.Find(Id) ?? throw new NullReferenceException($"Form not found with Id {Id}");
 
-            return this.View("ViewJsonForm", form);
+            return View("ViewJsonForm", form);
         }
 
         // GET: Form
         public ActionResult ViewByName(string Name)
         {
-            Form thisForm = this.FormRepository.GetByName(Name);
+            Form thisForm = FormRepository.GetByName(Name);
 
             if (thisForm is null)
             {
-                return this.Redirect("/Error/NotFound");
+                return Redirect("/Error/NotFound");
             }
 
             if (thisForm.IsJsonForm)
             {
-                return this.View("ViewJsonForm", thisForm);
+                return View("ViewJsonForm", thisForm);
             }
             else
             {
                 MetaConstructor c = AdminController.Constructor;
 
-                MetaObject mo = new MetaObject(thisForm, c);
+                MetaObject mo = new(thisForm, c);
                 mo.Hydrate();
-                return this.View("ViewForm", mo);
+                return View("ViewForm", mo);
             }
         }
     }

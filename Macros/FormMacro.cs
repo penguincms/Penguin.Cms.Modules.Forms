@@ -4,16 +4,15 @@ using System.Collections.Generic;
 
 namespace Penguin.Cms.Modules.Forms.Macros
 {
-
     public class FormMacro : ITemplateProperty
     {
         public List<FormMacro> Children { get; } = new List<FormMacro>();
 
         public string DisplayName { get; set; } = "Form Macros";
 
-        public string MacroBody => $"@(Model.{this.DisplayName.ToVariableName()})";
+        public string MacroBody => $"@(Model.{DisplayName.ToVariableName()})";
 
-        IEnumerable<ITemplateProperty> ITemplateProperty.Children => this.Children;
+        IEnumerable<ITemplateProperty> ITemplateProperty.Children => Children;
 
         public FormMacro()
         {
@@ -21,7 +20,7 @@ namespace Penguin.Cms.Modules.Forms.Macros
 
         public FormMacro(string FieldName)
         {
-            this.DisplayName = FieldName;
+            DisplayName = FieldName;
         }
     }
 }

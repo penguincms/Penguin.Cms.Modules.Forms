@@ -11,7 +11,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Models
 
         public FormSubmissionPageModel(List<SubmittedForm> submissions)
         {
-            this.Submissions = submissions;
+            Submissions = submissions;
         }
     }
 }

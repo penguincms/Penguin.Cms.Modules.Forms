@@ -22,44 +22,44 @@ namespace Penguin.Cms.Modules.Forms.Macros
 
         protected FormRepository FormRepository { get; set; }
 
-        public Form(FormRepository formRepository, ISendTemplates emailTemplateRepository = null)
+        public Form(FormRepository formRepository, ISendTemplates? emailTemplateRepository = null)
         {
-            this.EmailTemplateRepository = emailTemplateRepository;
-            this.FormRepository = formRepository;
+            EmailTemplateRepository = emailTemplateRepository;
+            FormRepository = formRepository;
         }
 
-        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup startup)
+        public void AcceptMessage(Penguin.Messaging.Application.Messages.Startup message)
         {
-            this.RefreshHandlers();
+            RefreshHandlers();
         }
 
-        public void AcceptMessage(Creating<JsonForm> startup)
+        public void AcceptMessage(Creating<JsonForm> message)
         {
-            this.RefreshHandlers();
+            RefreshHandlers();
         }
 
-        public void AcceptMessage(Updating<JsonForm> startup)
+        public void AcceptMessage(Updating<JsonForm> message)
         {
-            this.RefreshHandlers();
+            RefreshHandlers();
         }
 
-        public void AcceptMessage(Creating<SubmittedForm> submittedForm)
+        public void AcceptMessage(Creating<SubmittedForm> message)
         {
-            if (submittedForm is null)
+            if (message is null)
             {
-                throw new System.ArgumentNullException(nameof(submittedForm));
+                throw new System.ArgumentNullException(nameof(message));
             }
 
-            Dictionary<string, object> Parameters = new Dictionary<string, object>();
+            Dictionary<string, object> Parameters = new();
 
-            foreach (string thisField in submittedForm.Target.GetKeys())
+            foreach (string thisField in message.Target.GetKeys())
             {
-                Parameters.Add(thisField.ToVariableName(), submittedForm.Target.GetValue(thisField));
+                Parameters.Add(thisField.ToVariableName(), message.Target.GetValue(thisField));
             }
 
-            Parameters.Add(FORM_BODY_MACRO.ToVariableName(), submittedForm.Target.FormData.PrettifyJson());
+            Parameters.Add(FORM_BODY_MACRO.ToVariableName(), message.Target.FormData.PrettifyJson());
 
-            this.EmailTemplateRepository.TrySendTemplate(Parameters, null, submittedForm.Target.Owner.ToString());
+            EmailTemplateRepository.TrySendTemplate(Parameters, null, message.Target.Owner.ToString());
         }
 
         public IEnumerable<ITemplateDefinition> GetTemplateDefinitions()
@@ -69,11 +69,11 @@ namespace Penguin.Cms.Modules.Forms.Macros
 
         private void RefreshHandlers()
         {
-            List<ITemplateDefinition> toReturn = new List<ITemplateDefinition>();
+            List<ITemplateDefinition> toReturn = new();
 
-            foreach (JsonForm thisForm in this.FormRepository.All.ToList())
+            foreach (JsonForm thisForm in FormRepository.All.ToList())
             {
-                TemplateDefinition toAdd = new TemplateDefinition(thisForm.Name, this.GetType(), thisForm.Guid.ToString());
+                TemplateDefinition toAdd = new(thisForm.Name, GetType(), thisForm.Guid.ToString());
 
                 toAdd.Children.Add(new FormMacro(FORM_BODY_MACRO));
 

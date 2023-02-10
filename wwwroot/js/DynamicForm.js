@@ -1,11 +1,7 @@
-﻿
-$(document).ready(function () {
-
-
+﻿$(document).ready(function () {
 });
 
 function CopyTemplate(element) {
-
     var template = $(element).closest('property').children('value').children('template');
 
     var thtml = $(template).html();
@@ -19,5 +15,4 @@ function CopyTemplate(element) {
 	newTemplate.show();
 
 	Meta.AttachSearchHandler();
-
 }

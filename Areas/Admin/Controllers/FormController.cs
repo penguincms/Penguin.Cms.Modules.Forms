@@ -27,13 +27,13 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
             public string? _Id { get; set; }
 
             public string? Formhtml { get; set; }
-            public int Id => int.TryParse(this._Id, out int id) ? id : 0;
+            public int Id => int.TryParse(_Id, out int id) ? id : 0;
         }
 
         public FormController(FormRepository formRepository, FormSubmissionRepository formSubmissionRepository, IServiceProvider serviceProvider, IUserSession userSession) : base(serviceProvider, userSession)
         {
-            this.FormSubmissionRepository = formSubmissionRepository;
-            this.FormRepository = formRepository;
+            FormSubmissionRepository = formSubmissionRepository;
+            FormRepository = formRepository;
         }
 
         public ActionResult BaseEdit(int Id)
@@ -43,14 +43,14 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
 
         public ActionResult Create()
         {
-            JsonForm newForm = new JsonForm();
-            FormCreatePageModel model = new FormCreatePageModel
+            JsonForm newForm = new();
+            FormCreatePageModel model = new()
             {
                 ExistingForm = newForm,
-                Modules = this.ComponentService.GetComponents<ViewModule, Entity>(newForm).ToList()
+                Modules = ComponentService.GetComponents<ViewModule, Entity>(newForm).ToList()
             };
 
-            return this.View(model);
+            return View(model);
         }
 
         public override ActionResult Edit(int? id, string? type)
@@ -60,15 +60,15 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
                 throw new ArgumentNullException(nameof(id));
             }
 
-            JsonForm existingForm = this.FormRepository.Find(id.Value);
+            JsonForm existingForm = FormRepository.Find(id.Value);
 
-            FormCreatePageModel model = new FormCreatePageModel
+            FormCreatePageModel model = new()
             {
                 ExistingForm = existingForm,
-                Modules = this.ComponentService.GetComponents<ViewModule, Entity>(existingForm).ToList()
+                Modules = ComponentService.GetComponents<ViewModule, Entity>(existingForm).ToList()
             };
 
-            return this.View("Create", model);
+            return View("Create", model);
         }
 
         public ActionResult SaveForm([FromBody] FormPost formBody)
@@ -80,23 +80,18 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
 
             JsonForm toSave;
 
-            using (IWriteContext context = this.FormRepository.WriteContext())
+            using (IWriteContext context = FormRepository.WriteContext())
             {
-                if (formBody.Id != 0)
-                {
-                    toSave = this.FormRepository.Find(formBody.Id) ?? throw new NullReferenceException($"Can not find form with Id {formBody.Id}");
-                }
-                else
-                {
-                    toSave = new JsonForm();
-                }
+                toSave = formBody.Id != 0
+                    ? FormRepository.Find(formBody.Id) ?? throw new NullReferenceException($"Can not find form with Id {formBody.Id}")
+                    : new JsonForm();
 
                 toSave.FormData = formBody.Formhtml;
 
-                this.FormRepository.AddOrUpdate(toSave);
+                FormRepository.AddOrUpdate(toSave);
             }
 
-            JsonForm SavedForm = this.FormRepository.Find(toSave.Guid);
+            JsonForm SavedForm = FormRepository.Find(toSave.Guid);
 
             return new JsonResult(new { Id = SavedForm._Id });
         }
@@ -105,10 +100,10 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
         {
             if (string.IsNullOrWhiteSpace(Name))
             {
-                List<FormSubmissionPageModel> model = this.FormRepository.All
+                List<FormSubmissionPageModel> model = FormRepository.All
                                                                     .ToList()
                                                                     .Select(f =>
-                                                                        new FormSubmissionPageModel(this.FormSubmissionRepository.GetByOwner(f.Guid))
+                                                                        new FormSubmissionPageModel(FormSubmissionRepository.GetByOwner(f.Guid))
                                                                         {
                                                                             Form = f,
                                                                         })
@@ -116,31 +111,26 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
 
                 model.AddRange(TypeFactory.GetDerivedTypes(typeof(Form)).Select(t =>
                 {
-                    if (Activator.CreateInstance(t) is Form formInstance)
-                    {
-                        return new FormSubmissionPageModel(this.FormSubmissionRepository.GetByOwner(formInstance.Guid))
+                    return Activator.CreateInstance(t) is Form formInstance
+                        ? new FormSubmissionPageModel(FormSubmissionRepository.GetByOwner(formInstance.Guid))
                         {
                             Form = formInstance
-                        };
-                    }
-                    else
-                    {
-                        throw new Exception("What the fuck?");
-                    }
+                        }
+                        : throw new Exception("What the fuck?");
                 }));
 
-                return this.View(model);
+                return View(model);
             }
             else
             {
-                Form thisForm = this.FormRepository.GetByName(Name);
+                Form thisForm = FormRepository.GetByName(Name);
 
-                FormSubmissionPageModel model = new FormSubmissionPageModel(this.FormSubmissionRepository.GetByOwner(thisForm.Guid))
+                FormSubmissionPageModel model = new(FormSubmissionRepository.GetByOwner(thisForm.Guid))
                 {
                     Form = thisForm
                 };
 
-                return this.View("FormSubmissions", model);
+                return View("FormSubmissions", model);
             }
         }
     }
