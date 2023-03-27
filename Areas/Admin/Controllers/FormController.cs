@@ -111,7 +111,7 @@ namespace Penguin.Cms.Modules.Forms.Areas.Admin.Controllers
                                                                         })
                                                                     .ToList();
 
-                model.AddRange(TypeFactory.GetDerivedTypes(typeof(Form)).Select(t =>
+                model.AddRange(TypeFactory.Default.GetDerivedTypes(typeof(Form)).Select(t =>
                 {
                     return Activator.CreateInstance(t) is Form formInstance
                         ? new FormSubmissionPageModel(FormSubmissionRepository.GetByOwner(formInstance.Guid))
